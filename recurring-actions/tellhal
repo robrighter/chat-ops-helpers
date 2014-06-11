@@ -1,0 +1,43 @@
+#!/bin/sh
+
+HAL_HOST=localhost
+usePipe=false;
+verbose=false;
+while getopts ":pv" opt; do
+	case $opt in
+	p)
+		# Pipe input mode
+		usePipe=true;
+		;;
+	v)
+		verbose=true;
+		;;
+	\?)
+		echo "Invalid option: -$OPTARG" >&2
+		exit 1
+		;;
+	esac
+	# Shift the option off the position args array
+	shift $((OPTIND - 1))
+done
+
+if [ "$usePipe" == true ]; then
+	if [ $# -lt 1 ]; then
+        echo "usage: [command] | tellhal -p [tag]"
+        exit 1
+	fi
+	tag=$1
+	input=$(cat)
+else
+	if [ $# -lt 2 ]; then
+        echo "usage: tellhal [tag] [message]"
+        exit 1
+	fi
+	tag=$1
+	input=$2
+fi
+
+printf "$tag\n$input" | nc $HAL_HOST 7890
+if [ "$verbose" == true ]; then
+	echo "$tag\n$input";
+fi
