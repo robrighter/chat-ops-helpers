@@ -5,7 +5,7 @@ module.exports = ThrottledMessageHandler;
 var globalCache = new NodeCache( { stdTTL: 120, checkperiod: 150 } );
 
 /**
- * Constrcutor
+ * Constructor
  *
  * @param hipchatUserHandler
  * @constructor
